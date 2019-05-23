@@ -1,0 +1,36 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+      "tslint:recommended",
+      "tslint-config-airbnb"
+  ],
+  "jsRules": {},
+  "rules": {
+    "no-unused-expression": [true, "allow-tagged-template"],
+    "no-duplicate-imports": false,
+    "interface-name": false,
+    "no-unused-variable": true,
+    "no-empty": false,
+    "indent": [true, "spaces", 2],
+    "no-console": {
+    "options": ["debug", "info", "log", "dir", "time", "timeEnd", "trace"],
+    "severity": "warn"
+    },
+    "variable-name": false,
+    "no-var-requires": false,
+    "max-line-length": false,
+    "no-increment-decrement": false,
+    "object-literal-sort-keys": false,
+    "prefer-array-literal": false,
+    "prefer-for-of": false,
+    "ter-arrow-parens": false,
+    "arrow-parens": false,
+    "align": false,
+    "no-else-after-return": false,
+    "no-parameter-reassignment": false,
+    "one-variable-per-declaration": false,
+    "import-name": false,
+    "no-debugger": false
+  },
+  "rulesDirectory": []
+}
