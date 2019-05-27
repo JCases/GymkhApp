@@ -33,8 +33,8 @@ class SideBar extends Component<any, IStateSideBar> {
 
   public render() {
     return (
-      <Container>
-        <Content style={{ flex: 1, backgroundColor: theme.white.main, top: -1 }} >
+      <Container style={{ backgroundColor: theme.white.main, height: '100%' }}>
+        <Content style={{ top: -1 }} >
           <Image source={ require('./../../assets/images/login.png') } style={{ alignSelf: 'stretch', height: deviceHeight / 3.5, width: '100%', position: 'relative', marginBottom: 10 }} />
           <Image source={ require('./../../assets/images/logo-dark.png') } style={{ position: 'absolute', left: Platform.OS === 'android' ? (deviceWidth / 4.4) : (deviceWidth / 2.4), top: Platform.OS === 'android' ? deviceHeight / 22 : deviceHeight / 20, width: 140, height: 140, resizeMode: 'cover' }} />
           <List
@@ -58,7 +58,7 @@ class SideBar extends Component<any, IStateSideBar> {
               </ListItem> }
           />
         </Content>
-        <View style={{ justifyContent: 'flex-end', backgroundColor: theme.white.main }}>
+        <View style={{ justifyContent: 'flex-end' }}>
           <ListItem button noBorder onPress={ () => this.props.navigation.navigate('Login') }>
             <Left>
               <Icon active type="FontAwesome5" name="power-off" style={{ color: theme.red.main, fontSize: 26, width: 30 }} />
@@ -73,4 +73,4 @@ class SideBar extends Component<any, IStateSideBar> {
   }
 }
 
-export default withNavigation(SideBar); ;
+export default withNavigation(SideBar);
