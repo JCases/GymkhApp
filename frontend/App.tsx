@@ -8,6 +8,8 @@ import Gymkhana from './src/screens/gymkhana';
 import Loading from './src/screens/loading';
 import Login from './src/screens/login';
 import Main from './src/screens/main';
+import MainPhases from './src/screens/mainPhases';
+import Phase from './src/screens/phase';
 
 import SideBar from './src/components/sidebar';
 
@@ -27,6 +29,8 @@ const AppNavigator = createStackNavigator({
   Main,
   SideBar,
   Gymkhana,
+  Phase,
+  MainPhases,
 }, { initialRouteName: 'Main', headerMode: 'none' },
 );
 

@@ -18,9 +18,9 @@ class SideBar extends Component<any, IStateSideBar> {
   private datas = [{
     name: 'Inicio', route: 'Login', icon: 'home', type:'FontAwesome5', bg: theme.green.main,
   }, {
-    name: 'Gymkhanas', route: 'Login', icon: 'history', type:'FontAwesome5', bg:  theme.blue.main, types: '11',
+    name: 'Gymkhanas', route: 'Phase', icon: 'history', type:'FontAwesome5', bg:  theme.blue.main, types: '11',
   }, {
-    name: 'Perfil', route: 'Login', icon: 'face-profile', type:'MaterialCommunityIcons', bg:  theme.yellow.main,
+    name: 'Perfil', route: 'MainPhases', icon: 'face-profile', type:'MaterialCommunityIcons', bg:  theme.yellow.main,
   }];
 
   public constructor(props: any) {
