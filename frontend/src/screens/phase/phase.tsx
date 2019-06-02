@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 
-import { Body, Button, Card, CardItem, Container, Content, Footer, Header, Icon, Left, Right, Segment, Text } from 'native-base';
-import { Dimensions, ImageBackground, Platform, View, Image } from 'react-native';
+import { Button, Card, CardItem, Container, Content, Footer, Header, Icon, Left, Right, Segment, Text } from 'native-base';
+import { Dimensions, ImageBackground, StatusBar, View } from 'react-native';
 
 import { theme } from '../../theme';
 
@@ -35,7 +35,7 @@ class Phase extends Component<IPropsPhase, IStatePhase> {
   public render() {
     const { segment } = this.state;
     return (
-      <Container style={{ backgroundColor: theme.blue.main }}>
+      <Container style={{ backgroundColor: theme.blue.main, marginTop: StatusBar.currentHeight }}>
         <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
           <Left>
             <Button transparent onPress={ () => this.props.navigation!.goBack() }>

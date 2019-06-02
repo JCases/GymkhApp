@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 
 import { Button, Header, Icon, Text } from 'native-base';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
-import { Label, Logo } from './style';
 
 import { Content } from './../../style';
 import { theme } from './../../theme';
@@ -12,8 +10,6 @@ import { theme } from './../../theme';
 class Loading extends Component<any, any> {
   private constructor(props: any) {
     super(props);
-    this.state = {
-    };
   }
 
   public render() {
@@ -22,10 +18,10 @@ class Loading extends Component<any, any> {
         <Header androidStatusBarColor={ theme.blueGray.secondary } style={{ height: 0 }} transparent />
         <View style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <Content>
-            <Logo source={ require('./../../assets/images/logo-light.png') }/>
-            <Label>
+            <Image source={ require('./../../assets/images/logo-light.png') } style={{ width: 260, height: 260 }} />
+            <Text style={{ textAlign: 'center', fontSize: 32, lineHeight: 48, marginTop: 60, color: theme.white.main }}>
               Play With Friends{'\n'}Win Prizes
-            </Label>
+            </Text>
           </Content>
           <Content>
             <Button onPress={ () => this.props.navigation.navigate('Login') } large rounded style={ { backgroundColor: theme.violet.main, alignSelf: 'center' } }>

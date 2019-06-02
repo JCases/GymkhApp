@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import userBackend from '../backend/userBackend';
-import { Errors } from '../web/src/shared';
+import { Errors } from './../shared';
 
 export class UserRouter {
   public router: Router;

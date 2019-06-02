@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 
 import { Body, Button, Container, Content, Footer, Header, Icon, Left, Right, Text, Thumbnail, Title } from 'native-base';
-import { Image, View } from 'react-native';
+import { Image, StatusBar, View } from 'react-native';
 
 import { theme } from '../../theme';
 
@@ -20,7 +20,7 @@ class Gymkhana extends Component<IPropsGymkhana, any> {
 
   public render() {
     return (
-      <Container style={{ backgroundColor: theme.white.main }}>
+      <Container style={{ backgroundColor: theme.white.main, marginTop: StatusBar.currentHeight }}>
         <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
           <Left>
             <Button transparent onPress={ () => this.props.navigation!.goBack() }>

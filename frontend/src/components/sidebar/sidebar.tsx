@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 
 import { Badge, Container, Content, Icon, Left, List, ListItem, Right, Text } from 'native-base';
-import { Dimensions, Image, Platform, View } from 'react-native';
+import { Dimensions, Image, Platform, StatusBar, View } from 'react-native';
 
 import { theme } from '../../theme';
 
@@ -16,11 +16,11 @@ const deviceWidth = Dimensions.get('window').width;
 
 class SideBar extends Component<any, IStateSideBar> {
   private datas = [{
-    name: 'Inicio', route: 'Login', icon: 'home', type:'FontAwesome5', bg: theme.green.main,
+    name: 'Inicio', route: 'MainPhases', icon: 'home', type:'FontAwesome5', bg: theme.green.main,
   }, {
     name: 'Gymkhanas', route: 'Phase', icon: 'history', type:'FontAwesome5', bg:  theme.blue.main, types: '11',
   }, {
-    name: 'Perfil', route: 'MainPhases', icon: 'face-profile', type:'MaterialCommunityIcons', bg:  theme.yellow.main,
+    name: 'Perfil', route: 'Profile', icon: 'face-profile', type:'MaterialCommunityIcons', bg:  theme.yellow.main,
   }];
 
   public constructor(props: any) {
@@ -33,7 +33,7 @@ class SideBar extends Component<any, IStateSideBar> {
 
   public render() {
     return (
-      <Container style={{ backgroundColor: theme.white.main, height: '100%' }}>
+      <Container style={{ backgroundColor: theme.white.main, height: '100%', marginTop: StatusBar.currentHeight }}>
         <Content style={{ top: -1 }} >
           <Image source={ require('./../../assets/images/login.png') } style={{ alignSelf: 'stretch', height: deviceHeight / 3.5, width: '100%', position: 'relative', marginBottom: 10 }} />
           <Image source={ require('./../../assets/images/logo-dark.png') } style={{ position: 'absolute', left: Platform.OS === 'android' ? (deviceWidth / 4.4) : (deviceWidth / 2.4), top: Platform.OS === 'android' ? deviceHeight / 22 : deviceHeight / 20, width: 140, height: 140, resizeMode: 'cover' }} />

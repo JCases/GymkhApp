@@ -2,10 +2,21 @@ import * as bcrypt from 'bcryptjs';
 import { Sequelize } from 'sequelize-typescript';
 import Environment from './../utils/environment';
 
+import Company from './company.model';
+import Gymkhana from './gymkhana.model';
+import Phase from './phase.model';
+import Status from './status.model';
 import User from './user.model';
+import UsersGymkhanas from './usersGymkhanas.model';
 
 interface ISequelizeModels {
   User: typeof User;
+  Gymkhana: typeof Gymkhana;
+  Company: typeof Company;
+  Phase: typeof Phase;
+
+  UsersGymkhana: typeof UsersGymkhanas;
+  Status: typeof Status;
 }
 
 class Database {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Body, Button, Container, Content, Header, Icon, Left, Title } from 'native-base';
-import { FlatList } from 'react-native';
+import { FlatList, StatusBar } from 'react-native';
 
 import CardPhase from '../../components/cardPhase';
 
@@ -18,7 +18,7 @@ class MainPhases extends Component<any, any> {
     const cards = [<CardPhase state={ StatesPhase.ACTIVATE }/>, <CardPhase state={ StatesPhase.AWAIT }/>, <CardPhase state={ StatesPhase.COMPLETE }/>];
 
     return (
-      <Container style={{ backgroundColor: theme.white.main }}>
+      <Container style={{ backgroundColor: theme.white.main, marginTop: StatusBar.currentHeight }}>
         <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
           <Left>
             <Button transparent onPress={ () => this.props.navigation!.goBack() }>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Body, Button, Container, Content, Drawer, Header, Icon, Input, Item, Left, Right, Text, Title } from 'native-base';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, StatusBar, View } from 'react-native';
 
 import CardGymkhana from './../../components/cardGymkhana';
 import SideBar from './../../components/sidebar';
@@ -10,7 +10,6 @@ import { theme } from './../../theme';
 
 interface IStateMain {
   filter?: string;
-  refreshing?: boolean;
 }
 
 class Main extends Component<any, IStateMain> {
@@ -20,12 +19,11 @@ class Main extends Component<any, IStateMain> {
     super(props);
     this.state = {
       filter: '',
-      refreshing: false,
     };
   }
 
   public render() {
-    const { refreshing } = this.state;
+    // const { filter } = this.state;
     const cards = [<CardGymkhana />, <CardGymkhana />, <CardGymkhana />, <CardGymkhana />];
     // FIXME: Need put a Interface in Props
     const cardsFilter = cards; // cards.filter(i => i.props.name.toLowerCase().includes(this.state.filter!.toLowerCase()));
@@ -33,7 +31,7 @@ class Main extends Component<any, IStateMain> {
     return (
       <Drawer type="overlay" ref={ (ref) => { this.drawer = ref; } } content={ <SideBar /> } onClose={ () => this.drawer._root.close() }>
         <Container>
-          <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
+          <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main, marginTop: StatusBar.currentHeight }}>
             <Left>
               <Button transparent onPress={ () => this.drawer._root.open() }>
                 <Icon name="menu" />

@@ -2,7 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { models } from '../models/database';
 import jwtHelper from '../utils/jwt';
 
-// FIXME: Create and Import -> import { Errors } from '../web/src/shared';
+import { Errors } from '../shared';
 
 class UserBackend {
   public async signIn(email: string, password: string) {
@@ -11,8 +11,8 @@ class UserBackend {
       if (bcrypt.compareSync(password, user.password!)) {
         user.token = jwtHelper.encode({ id: user.id, type: 'user' }, '60 days');
         return { result: user };
-      } else  return { error: { /* code: Errors.incorrectCredentials */ } };
-    } else return { error: { /* code: Errors.incorrectCredentials */ } };
+      } else  return { error: { code: Errors.incorrectCredentials } };
+    } else return { error: { code: Errors.incorrectCredentials } };
   }
 
   public async rehydrateToken(token: string) {
@@ -22,8 +22,8 @@ class UserBackend {
       if (user) {
         user.token = jwtHelper.encode({ id: user.id, type: 'user' });
         return { result: user };
-      } else return { error: { /* code: Errors.notLogged */ } };
-    } else return { error: { /* code: Errors.notLogged */ } };
+      } else return { error: { code: Errors.notLogged } };
+    } else return { error: { code: Errors.notLogged } };
   }
 }
 

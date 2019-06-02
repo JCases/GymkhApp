@@ -10,6 +10,7 @@ import Login from './src/screens/login';
 import Main from './src/screens/main';
 import MainPhases from './src/screens/mainPhases';
 import Phase from './src/screens/phase';
+import Profile from './src/screens/profile';
 
 import SideBar from './src/components/sidebar';
 
@@ -31,7 +32,8 @@ const AppNavigator = createStackNavigator({
   Gymkhana,
   Phase,
   MainPhases,
-}, { initialRouteName: 'Main', headerMode: 'none' },
+  Profile,
+}, { initialRouteName: 'Loading', headerMode: 'none' },
 );
 
 export default createAppContainer(AppNavigator);
