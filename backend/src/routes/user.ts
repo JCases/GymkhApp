@@ -26,9 +26,53 @@ export class UserRouter {
     }).catch(next);
   }
 
+  public register(req: Request, res: Response, next: NextFunction) {
+    const { nick, email, password } = req.body;
+    if (!nick || !email || !password) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.register(nick, email, password).then(r => res.json(r)).catch(next);
+  }
+
+  public updateUser(req: Request, res: Response, next: NextFunction) {
+    const { user } = req.body;
+    if (!user) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.updateUser(user).then(r => res.json(r)).catch(next);
+  }
+
+  public addGymkhana(req: Request, res: Response, next: NextFunction) {
+    const { user, gymkhana } = req.body;
+    if (!user || !gymkhana) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.addGymkhana(user, gymkhana).then(r => res.json(r)).catch(next);
+  }
+
+  public getGymkhanas(req: Request, res: Response, next: NextFunction) {
+    const { user } = req.body;
+    if (!user) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.getGymkhanas(user).then(r => res.json(r)).catch(next);
+  }
+
+  public addPhase(req: Request, res: Response, next: NextFunction) {
+    const { user, phase } = req.body;
+    if (!user && phase) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.addPhase(user, phase).then(r => res.json(r)).catch(next);
+  }
+
+  public lastPhase(req: Request, res: Response, next: NextFunction) {
+    const { user } = req.body;
+    if (!user) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.lastPhase(user).then(r => res.json(r)).catch(next);
+  }
+
   public init() {
     this.router.post('/auth', this.signIn);
     this.router.get('/auth/rehydrate', this.rehydrateToken);
+    this.router.post('/register', this.register);
+    this.router.put('/update', this.updateUser);
+
+    this.router.put('/gymkhana', this.addGymkhana);
+    this.router.get('/gymkhana', this.getGymkhanas);
+
+    this.router.put('/phase', this.addPhase);
+    this.router.get('/phase', this.lastPhase);
   }
 }
 

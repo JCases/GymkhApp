@@ -1,3 +1,4 @@
+import { HasManyCreateAssociationMixin, HasManyGetAssociationsMixin } from 'sequelize';
 import { AllowNull, Column, DataType, Default, HasMany, Length, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import Gymkhana from './gymkhana.model';
 
@@ -21,4 +22,8 @@ export default class Company extends Model<Company> {
   // Gymkhana (O) - Company (M)
   @HasMany(() => Gymkhana)
   public gymkhanas?: Gymkhana[];
+
+  // Associations
+  public createGymkhana!: HasManyCreateAssociationMixin<Gymkhana>;
+  public getGymkhanas!: HasManyGetAssociationsMixin<Gymkhana>;
 }

@@ -1,12 +1,14 @@
-import { IPhase } from './IPhase';
+import { ICompany, IPhase, IUser } from '..';
 
 export interface IGymkhana {
   id?: string;
-  logo?: string;
   name?: string;
-  date?: Date;
-  phases: IPhase[];
-  background?: string;
   description?: string;
-  participants?: string;
+  start?: Date;
+  end?: Date;
+  image?: string;
+  city?: string;
+  users?: IUser[];
+  company?: ICompany;
+  phases: IPhase[];
 }

@@ -1,6 +1,8 @@
-import { AllowNull, BelongsTo, Column, DataType, Default, ForeignKey, Length, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, Length, Model, PrimaryKey, Table } from 'sequelize-typescript';
 
 import Gymkhana from './gymkhana.model';
+import Status from './status.model';
+import User from './user.model';
 
 @Table({ timestamps: true, paranoid: true })
 export default class Phase extends Model<Phase> {
@@ -26,10 +28,6 @@ export default class Phase extends Model<Phase> {
   @Column
   public image?: Buffer;
 
-  @AllowNull(false)
-  @Column
-  public position?: string;
-
   // Phase (M) - Gymkhana (O)
   @ForeignKey(() => Gymkhana)
   @Column
@@ -37,4 +35,8 @@ export default class Phase extends Model<Phase> {
 
   @BelongsTo(() => Gymkhana)
   public gymkhana?: Gymkhana;
+
+  // User (M) - Phase(M)
+  @BelongsToMany(() => User, () => Status)
+  public users?: User[];
 }

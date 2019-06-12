@@ -1,3 +1,4 @@
+import { HasManyCreateAssociationMixin, HasManyGetAssociationsMixin } from 'sequelize';
 import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, Length, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 
 import Company from './company.model';
@@ -18,6 +19,11 @@ export default class Gymkhana extends Model<Gymkhana> {
   @Column
   public name?: string;
 
+  @Length({ min: 2, max: 400 })
+  @AllowNull(false)
+  @Column
+  public description?: string;
+
   @AllowNull(false)
   @Column
   public start?: Date;
@@ -34,19 +40,23 @@ export default class Gymkhana extends Model<Gymkhana> {
   @Column
   public city?: string;
 
-  // Phase (M) - Gymkhana (O)
-  @HasMany(() => Phase)
-  public gymkhanas?: Phase[];
-
   // User (M) - Gymkhana (M)
   @BelongsToMany(() => User, () => UsersGymkhanas)
   public users?: User[];
 
   // Company (O) - Gymkhana (M)
+  @BelongsTo(() => Company)
+  public company?: Company;
+
   @ForeignKey(() => Company)
   @Column
   public companyId?: string;
 
-  @BelongsTo(() => Company)
-  public company?: Company;
+  // Phase (M) - Gymkhana (O)
+  @HasMany(() => Phase)
+  public phases?: Phase[];
+
+  // Associations
+  public createPhase!: HasManyCreateAssociationMixin<Phase>;
+  public getPhases!: HasManyGetAssociationsMixin<Phase>;
 }

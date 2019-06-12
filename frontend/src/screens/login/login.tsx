@@ -45,11 +45,11 @@ class Login extends Component<any, IStateLogin> {
                 <Form>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Email</Label>
-                    <Input/>
+                    <Input style={{ color: theme.white.main }} value={ this.state.email } onChangeText={ (text) => this.setState({ email: text }) }/>
                   </ItemForm>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Password</Label>
-                    <Input secureTextEntry={ true }/>
+                    <Input secureTextEntry={ true } style={{ color: theme.white.main }} value={ this.state.password } onChangeText={ (text) => this.setState({ password: text }) }/>
                   </ItemForm>
                   <ListItem style={{  marginLeft: 40, marginRight: 40, marginTop: 14, borderBottomColor: 'transparent' }}>
                     <CheckBox color={ theme.blue.main } checked={ this.state.check } onPress={ () => this.setState({ check: !this.state.check }) } />
@@ -62,19 +62,19 @@ class Login extends Component<any, IStateLogin> {
                 <Form>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Email</Label>
-                    <Input />
+                    <Input style={{ color: theme.white.main }} value={ this.state.email } onChangeText={ (text) => this.setState({ email: text }) } />
                   </ItemForm>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Nick</Label>
-                    <Input />
+                    <Input style={{ color: theme.white.main }} value={ this.state.nick } onChangeText={ (text) => this.setState({ nick: text }) } />
                   </ItemForm>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Password</Label>
-                    <Input secureTextEntry={ true }/>
+                    <Input secureTextEntry={ true } style={{ color: theme.white.main }} value={ this.state.password } onChangeText={ (text) => this.setState({ password: text }) } />
                   </ItemForm>
                   <ItemForm floatingLabel>
                     <Label style={{ color: theme.white.main, padding: 10, alignSelf: 'center' }}>Confirm Password</Label>
-                    <Input secureTextEntry={ true }/>
+                    <Input secureTextEntry={ true } style={{ color: theme.white.main }} value={ this.state.passwordC } onChangeText={ (text) => this.setState({ passwordC: text }) } />
                   </ItemForm>
                   <ListItem style={{  marginLeft: 40, marginRight: 40, marginTop: 14, borderBottomColor: 'transparent' }}>
                     <CheckBox color={ buttonColor.backgroundColor } checked={ this.state.check } onPress={ () => this.setState({ check: !this.state.check }) } />
@@ -92,10 +92,10 @@ class Login extends Component<any, IStateLogin> {
         </Content>
         <Footer style={{ backgroundColor: 'transparent' }}>
           <FooterTab>
-            <Button style={ { backgroundColor: theme.blue.main } } active={ this.state.mode === MODES.SIGN_IN ? true : false } onPress={ () => this.setState({ mode: MODES.SIGN_IN, check: false }) }>
+            <Button style={ { backgroundColor: theme.blue.main } } active={ this.state.mode === MODES.SIGN_IN ? true : false } onPress={ () => this.setState({ mode: MODES.SIGN_IN, check: false, email: '', password: '', nick: '', passwordC: '' }) }>
               <Text>Sign In</Text>
             </Button>
-            <Button style={ { backgroundColor: theme.orange.main } } active={ this.state.mode === MODES.SIGN_UP ? true : false } onPress={ () => this.setState({ mode: MODES.SIGN_UP, check: false }) }>
+            <Button style={ { backgroundColor: theme.orange.main } } active={ this.state.mode === MODES.SIGN_UP ? true : false } onPress={ () => this.setState({ mode: MODES.SIGN_UP, check: false, email: '', password: '', nick: '', passwordC: '' }) }>
               <Text>Sing Up</Text>
             </Button>
           </FooterTab>

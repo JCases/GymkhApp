@@ -1,7 +1,11 @@
+import { IGymkhana, IUser } from '..';
+
 export interface IPhase {
   id?: string;
   name?: string;
-  image?: string;
-  number?: string;
   description?: string;
+  phaseOrder?: number;
+  image?: Buffer;
+  gymkhana?: IGymkhana;
+  users?: IUser[];
 }

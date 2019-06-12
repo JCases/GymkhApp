@@ -3,6 +3,9 @@ import cors from 'cors';
 import express from 'express';
 import './models/database';
 
+import gymkhanaRoutes from './routes/gymkhana';
+import userRoutes from './routes/user';
+
 class App {
   public app: express.Application;
 
@@ -21,6 +24,8 @@ class App {
 
   private routes() {
     // TODO: Routes -> this.app.use('/v1/user', userRoutes);
+    this.app.use('/v1/user', userRoutes);
+    this.app.use('/v1/gymkhana', gymkhanaRoutes);
   }
 
   // FIXME: Change to Logget (Create and Import Logger Files)
