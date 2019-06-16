@@ -3,7 +3,7 @@ import * as path from 'path';
 export default class Environment {
   public static isProd = process.env.NODE_ENV === 'production';
   public static logFolder = process.env.LOG_FOLDER || path.resolve('./logs');
-  public static port = 3005;
+  public static port = 3000;
   public static host = 'localhost';
 
   public static secret = 'D2FSfsdhjFSADeSFSAD2dsfsd8';

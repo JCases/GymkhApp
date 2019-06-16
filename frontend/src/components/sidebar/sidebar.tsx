@@ -16,9 +16,7 @@ const deviceWidth = Dimensions.get('window').width;
 
 class SideBar extends Component<any, IStateSideBar> {
   private datas = [{
-    name: 'Inicio', route: 'MainPhases', icon: 'home', type:'FontAwesome5', bg: theme.green.main,
-  }, {
-    name: 'Gymkhanas', route: 'Phase', icon: 'history', type:'FontAwesome5', bg:  theme.blue.main, types: '11',
+    name: 'Inicio', route: 'Main', icon: 'home', type:'FontAwesome5', bg: theme.green.main,
   }, {
     name: 'Perfil', route: 'Profile', icon: 'face-profile', type:'MaterialCommunityIcons', bg:  theme.yellow.main,
   }];

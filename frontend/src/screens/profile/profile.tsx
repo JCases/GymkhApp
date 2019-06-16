@@ -1,39 +1,122 @@
 import React, { Component } from 'react';
-import ImagePicker from 'react-native-image-picker';
-import { FlatList, NavigationScreenProp } from 'react-navigation';
+import Dialog from 'react-native-dialog';
+import ImagePicker, { ImagePickerResponse } from 'react-native-image-picker';
+import { NavigationScreenProp } from 'react-navigation';
+import { connect } from 'react-redux';
 
-import { Body, Button, Container, Content, Header, Icon, Left, Right, Text, Thumbnail, Title } from 'native-base';
-import { PermissionsAndroid, StatusBar, View } from 'react-native';
+import { ActionSheet, Body, Button, Container, Content, Header, Icon, Left, Right, Text, Title } from 'native-base';
+import { ActivityIndicator, FlatList, Image, StatusBar, View } from 'react-native';
 
 import CardGymkhana from '../../components/cardGymkhana';
 
 import { theme } from '../../theme';
 
-import { IUser } from '../../shared';
+import { getGymkhanas, updateUser } from '../../actions/users';
+import { IGymkhana, IUser } from '../../shared';
+
+interface IStateUser {
+  cards: IGymkhana[];
+  loading: boolean;
+  user?: IUser;
+  visible?: boolean;
+  attModify?: string;
+  changed?: string;
+}
 
 interface IPropsUser {
   user?: IUser;
-  navigation?: NavigationScreenProp<any, any>;
-}
+  gymkhanas: IGymkhana[];
 
-interface IStateUser {
-  avatar?: string;
-  cameraPermissions: boolean;
-  galleryPermissions: boolean;
+  getGymkhanas?: (user: IUser) => IGymkhana[];
+  updateUser?: (user: IUser) => IUser;
+
+  navigation: NavigationScreenProp<any, any>;
 }
 
 class User extends Component<IPropsUser, IStateUser> {
-  public constructor(props: IPropsUser) {
+  public constructor(props: any) {
     super(props);
     this.state = {
-      avatar: '',
-      cameraPermissions: false,
-      galleryPermissions: false,
+      cards: [],
+      loading: true,
+      user: undefined,
+      visible: false,
+      attModify: '',
+      changed: '',
     };
-    // this.requestCameraPermission();
+  }
+
+  public componentWillReceiveProps(nextProps: any) {
+    if (this.state.loading) {
+      this.setState({ loading: false, cards: nextProps.gymkhanas, user: this.props.user! });
+    } else return;
   }
 
   public render() {
+    const { user } = this.state;
+
+    if (this.state.loading) this.props.getGymkhanas!(this.props.user!);
+
+    return (
+      <Container style={{ backgroundColor: theme.white.main, marginTop: StatusBar.currentHeight }}>
+        <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
+          <Left>
+            <Button transparent onPress={ () => this.props.navigation!.goBack() }>
+              <Icon type="Ionicons" name="ios-arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Perfil</Title>
+          </Body>
+          <Right>
+            <Button transparent onPress={ () => ActionSheet.show({
+              options: ['Modificar Nombre', 'Modificar Apellidos', 'Modificar Ciudad', 'Cancelar'],
+              cancelButtonIndex: 3,
+              title: 'Modificar Perfil',
+            },
+              (buttonIndex: any) => this.setState({ visible: true, attModify: buttonIndex === 0 ? 'Nombre' : (buttonIndex === 1 ? 'Apellidos' : 'Ciudad') })) }>
+              <Icon type="Ionicons" name="md-options"  />
+            </Button>
+          </Right>
+        </Header>
+        <Content>
+        <View>
+          <Dialog.Container visible={ this.state.visible }>
+            <Dialog.Title>Modificar Perfil</Dialog.Title>
+            <Dialog.Description>{ `¿${this.state.attModify!}?` }</Dialog.Description>
+            <Dialog.Input label="Introduce aquí la modificación" onChangeText={ (text) => this.setState({ changed: text })}/>
+            <Dialog.Button label="Aceptar" onPress={ () => this.modifyUser(this.state.attModify!) }/>
+          </Dialog.Container>
+        </View>
+          {user ?
+            <React.Fragment>
+              <View style={{ height: 160, width: '100%', backgroundColor: theme.blue.main, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Image source={{ uri: this.state.user!.image }} style={{ alignSelf: 'center', width: '100%', height: '100%', resizeMode: 'cover' }} />
+              </View>
+              <View style={{ backgroundColor: theme.blue.main, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
+                <View>
+                  <Text style={{ fontWeight: 'bold', fontSize: 22, marginLeft: 10, marginTop: 10, marginBottom: 10, color: theme.white.main }}>{ user!.nick }</Text>
+                  { (user!.firstName && user!.lastName) ? <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: 10, marginBottom: 10, color: theme.white.main }}>{ `${user!.firstName} ${user!.lastName}` }</Text> : <React.Fragment /> }
+                </View>
+                <Button transparent style={{ alignSelf: 'center', marginRight: 10 }} onPress={ () => this.requestCameraPermission() }>
+                  <Icon type="FontAwesome5" name="camera-retro" style={{ color: theme.white.main }} />
+                </Button>
+              </View>
+          <FlatList style={{ backgroundColor: theme.white.main, marginTop: 10 }} data={ this.state.cards.map(i => (<CardGymkhana key={ i.id } gymkhana={ i } active={ false }/>)) } renderItem={({ item }: any) => item } />
+            </React.Fragment>
+           : <View style={{ marginTop: 40, justifyContent: 'center', alignContent: 'center' }}><ActivityIndicator size="large" color={ theme.white.main } /></View>}
+        </Content>
+      </Container>
+    );
+  }
+
+  private async modifyUser(attribute: string) {
+    const nUser: IUser = { ...this.props.user, [attribute === 'Nombre' ? 'firstName' : (attribute === 'Apellidos' ? 'lastName' : 'city')]: this.state.changed };
+    this.props.updateUser!(nUser);
+    this.setState({ attModify: '', changed: '', visible: false });
+  }
+
+  private async requestCameraPermission() {
     const options = {
       title: 'Selecciona Imagen de Perfil',
       cancelButtonTitle: 'Cancelar',
@@ -45,55 +128,19 @@ class User extends Component<IPropsUser, IStateUser> {
       },
     };
 
-    const cards = [<CardGymkhana />, <CardGymkhana />, <CardGymkhana />, <CardGymkhana />];
-    return (
-      <Container style={{ backgroundColor: theme.blue.main, marginTop: StatusBar.currentHeight }}>
-        <Header androidStatusBarColor={ theme.blue.secondary } style={{ backgroundColor: theme.blue.main }}>
-          <Left>
-            <Button transparent onPress={ () => this.props.navigation!.goBack() }>
-              <Icon type="Ionicons" name="ios-arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Perfil</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content>
-          <View style={{ height: 160, width: '100%', backgroundColor: theme.blue.main, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <Thumbnail source={{ uri: this.state.avatar }} style={{ alignSelf: 'center', width: 140, height: 140, resizeMode: 'cover' }} />
-          </View>
-          <View style={{ backgroundColor: theme.blue.main, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
-            <View>
-              <Text style={{ fontWeight: 'bold', fontSize: 22, marginLeft: 10, marginTop: 10 }}>NOMBRE</Text>
-              <Text style={{ fontWeight: 'bold', fontSize: 18, marginLeft: 10, marginBottom: 10 }}>APELLIDO APELLIDO</Text>
-            </View>
-            <Button transparent style={{ alignSelf: 'center', marginRight: 10 }} onPress={ () => { ImagePicker.showImagePicker(options, (r: any) => { this.setState({ avatar: r.uri }); }); } }>
-              <Icon type="FontAwesome5" name="camera-retro" style={{ color: theme.white.main }} />
-            </Button>
-          </View>
-          <FlatList style={{ backgroundColor: theme.white.main, marginTop: 10 }} data={ cards } renderItem={({ item }: any) => item } />
-        </Content>
-      </Container>
-    );
-  }
-
-  private async requestCameraPermission() {
-    try {
-      if (await !PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA)) {
-        const GRANTED = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-          title: 'GymkhApp Permisos de la Cámara',
-          message:
-            'GymkhApp necesita acceso a tu camara ' +
-            'para que puedas tomar fotos impresionantes.',
-          buttonNeutral: 'Pregúntame Luego',
-          buttonPositive: 'OK',
-        });
-        if (GRANTED === PermissionsAndroid.RESULTS.GRANTED) this.setState({ cameraPermissions: true });
-        else this.setState({ cameraPermissions: false });
-      } else this.setState({ cameraPermissions: true });
-    } catch (e) {  this.setState({ cameraPermissions: false }); }
+    await ImagePicker.showImagePicker(options, (r: ImagePickerResponse) => {
+      if (!r.didCancel) {
+        this.setState({ user: { ...this.state.user, image: r.uri } });
+        this.props.updateUser!(this.state.user!);
+      }
+    });
   }
 }
 
-export default User;
+const mapStateToProps = (state: any) => ({ user: state.users.user, gymkhanas: state.users.gymkhanas });
+const mapDispatchToProps = (dispatch: any) => ({
+  getGymkhanas: (user: IUser) => dispatch(getGymkhanas(user)),
+  updateUser: (user: IUser) => dispatch(updateUser(user)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(User);

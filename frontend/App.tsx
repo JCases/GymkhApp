@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 
+import { Root } from 'native-base';
+
 import { store } from './src/utils/store';
 
 import Gymkhana from './src/screens/gymkhana';
@@ -14,11 +16,13 @@ import Profile from './src/screens/profile';
 
 import SideBar from './src/components/sidebar';
 
-export class App extends Component<any, any> {
+export default class App extends Component<any, any> {
   public render() {
     return (
       <Provider store={ store }>
-        <AppNavigator style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}/>
+        <Root>
+          <Navigation style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}/>
+        </Root>
       </Provider>
     );
   }
@@ -33,7 +37,7 @@ const AppNavigator = createStackNavigator({
   Phase,
   MainPhases,
   Profile,
-}, { initialRouteName: 'Loading', headerMode: 'none' },
+}, { initialRouteName: 'Loading', headerMode: 'none', defaultNavigationOptions: { gesturesEnabled: false, swipeEnabled: false } },
 );
 
-export default createAppContainer(AppNavigator);
+const Navigation = createAppContainer(AppNavigator);

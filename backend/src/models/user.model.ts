@@ -31,7 +31,7 @@ export default class User extends Model<User> {
   public password?: string;
 
   @Column
-  public image?: Buffer;
+  public image?: string;
 
   @Length({ min: 2, max: 80 })
   @Column
@@ -44,6 +44,9 @@ export default class User extends Model<User> {
   // FIXME: Need Classes for Not Empty Cell
   @Column
   public token?: string;
+
+  @Column
+  public city?: string;
 
   // Gymkhana (M) - User (M)
   @BelongsToMany(() => Gymkhana, () => UsersGymkhanas)

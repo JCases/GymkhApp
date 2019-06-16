@@ -30,10 +30,10 @@ class UserBackend {
     } catch (e) { return { error: { code: Errors.unexpected } }; }
   }
 
-  public async register(nick: string, email: string, password: string) {
+  public async register(nick: string, email: string, password: string, city: string) {
     try {
       const passwordEncrypted = bcrypt.hashSync(password);
-      const user = { nick, email, password: passwordEncrypted };
+      const user = { nick, email, city, password: passwordEncrypted };
       const addUser = await models.User.create(user);
       if (addUser) {
         addUser.token = jwtHelper.encode({ id: addUser.id, type: 'user' }, '60 days');
@@ -57,10 +57,15 @@ class UserBackend {
       const gymkhanaDB = await models.Gymkhana.findByPk(gymkhana.id!);
       const userDB = await models.User.findByPk(user.id!);
       if (gymkhanaDB && userDB) {
+        const gymkhanasUser = await userDB.getGymkhanas();
+        const match = gymkhanasUser.find(e => e.id === gymkhana.id);
+        console.log(match);
+        if (match) return { result: false };
+
         userDB.addGymkhana(gymkhanaDB);
         return { result: true };
       } else return { error: { code: Errors.incorrectRequest } };
-    } catch (e) { return { error: { code: Errors.unexpected } }; }
+    } catch (e) { console.log(e); return { error: { code: Errors.unexpected } }; }
   }
 
   public async getGymkhanas(user: IUser) {

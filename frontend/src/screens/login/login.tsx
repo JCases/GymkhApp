@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
+import Dialog from 'react-native-dialog';
+import { NavigationScreenProp } from 'react-navigation';
+import { connect } from 'react-redux';
 
 import { Body, Button, CheckBox, Container, Content, Footer, FooterTab, Form, Header, Input, Label, ListItem, Text } from 'native-base';
-import { Image, ScrollView, StatusBar, View } from 'react-native';
+import { Alert, Image, ScrollView, StatusBar, View } from 'react-native';
 
 import { ItemForm } from './style';
 
+import { IUser } from '../../shared';
 import { theme } from './../../theme';
+
+import { register, rehydrate, signIn } from '../../actions/users';
 
 enum MODES {
   SIGN_IN = 'SIGN IN',
@@ -19,16 +25,30 @@ interface IStateLogin {
   nick?: string;
   check: boolean;
   mode: MODES;
+  city?: string;
+  visible: boolean;
 }
 
-class Login extends Component<any, IStateLogin> {
-  private constructor(props: any) {
+interface IPropsLogin {
+  rehydrate?: () => void;
+  signIn?: (email: string, password: string) => IUser;
+  register?: (email: string, password: string, nick: string, city: string) => IUser;
+
+  navigation: NavigationScreenProp<any, any>;
+}
+
+class Login extends Component<IPropsLogin, IStateLogin> {
+  public constructor(props: any) {
     super(props);
     this.state = {
       email: '',
       password: '',
+      passwordC: '',
+      nick: '',
       check: false,
       mode: MODES.SIGN_IN,
+      city: '',
+      visible: false,
     };
   }
 
@@ -38,6 +58,14 @@ class Login extends Component<any, IStateLogin> {
       <Container style={{ backgroundColor: theme.blueGray.main, marginTop: StatusBar.currentHeight }}>
         <Header androidStatusBarColor={ theme.blueGray.secondary } style={{ height: 0 }} transparent />
         <Content>
+        <View>
+          <Dialog.Container visible={ this.state.visible }>
+            <Dialog.Title>Localización para GymkhApp</Dialog.Title>
+            <Dialog.Description>¿En que ciudad vives?</Dialog.Description>
+            <Dialog.Input label="Ciudad" onChangeText={ (text) => this.setState({ city: text.toLowerCase() })}/>
+            <Dialog.Button label="Aceptar" onPress={ () => this.setCity() }/>
+          </Dialog.Container>
+        </View>
           <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
             <ScrollView keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
               <Image source={ require('./../../assets/images/logo-light.png') } style={{ width: 140, height: 140, alignSelf: 'center', marginTop: 20 }} />
@@ -84,7 +112,7 @@ class Login extends Component<any, IStateLogin> {
                   </ListItem>
                 </Form>
               ) }
-              <Button style={ { ...buttonColor, width: '80%', alignSelf: 'center', marginTop: 4 } } large rounded onPress={ () => this.props.navigation.navigate('Main') }>
+              <Button style={ { ...buttonColor, width: '80%', alignSelf: 'center', marginTop: 4 } } large rounded onPress={ () => this.onClick() }>
                 <Text style={ { fontSize: 14,  width: '100%', textAlign: 'center' } }>{ this.state.mode }</Text>
               </Button>
             </ScrollView>
@@ -96,13 +124,42 @@ class Login extends Component<any, IStateLogin> {
               <Text>Sign In</Text>
             </Button>
             <Button style={ { backgroundColor: theme.orange.main } } active={ this.state.mode === MODES.SIGN_UP ? true : false } onPress={ () => this.setState({ mode: MODES.SIGN_UP, check: false, email: '', password: '', nick: '', passwordC: '' }) }>
-              <Text>Sing Up</Text>
+              <Text>Sign Up</Text>
             </Button>
           </FooterTab>
         </Footer>
       </Container>
     );
   }
+
+  private async setCity() {
+    const { email, password, nick, city } = this.state;
+    if (city!.length > 0) {
+      this.props.register!(email, password, nick!, city!);
+      this.setState({ visible: false });
+      this.props.navigation.navigate('Main');
+    } else return;
+  }
+
+  private async onClick() {
+    const { email, password, passwordC, nick, mode } = this.state;
+    if (mode === MODES.SIGN_IN) {
+      this.props.signIn!('admin@admin.com', 'admin');
+      // if (email.length > 0 && password.length > 0) this.props.signIn!(email, password);
+      // else { Alert.alert('Inicio de Sesión Fallido', 'Datos Incorrectos', [{ text: 'Aceptar' }], { cancelable: false }); return; }
+      this.props.navigation.navigate('Main');
+    } else if (mode === MODES.SIGN_UP) {
+      if (email.length > 0 && password.length > 0 && passwordC === password && nick!.length > 0) this.setState({ visible: true });
+      else { Alert.alert('Registro Fallido', 'Datos Incorrectos', [{ text: 'Aceptar' }], { cancelable: false }); return; }
+    }
+  }
 }
 
-export default Login;
+const mapStateToProps = (state: any) => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+  rehydrate: () => dispatch(rehydrate()),
+  signIn: (email: string, password: string) => dispatch(signIn(email, password)),
+  register: (email: string, password: string, nick: string, city: string) => dispatch(register(email, password, nick, city)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

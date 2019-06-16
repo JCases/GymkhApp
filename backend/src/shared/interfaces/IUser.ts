@@ -5,10 +5,11 @@ export interface IUser {
   nick?: string;
   email?: string;
   password?: string;
-  image?: Buffer;
+  image?: string;
   firstName?: string;
   lastName?: string;
   token?: string;
+  city?: string;
   gymkhanas?: IGymkhana[];
   phases?: IPhase[];
 }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Errors } from '../shared/';
 
 // FIXME: Link for Requests
-const client = axios.create({ baseURL: 'http://localhost:3005/v1' });
+const client = axios.create({ baseURL: 'http://egeeks.es:3000/v1' });
 
 client.interceptors.request.use((config) => {
   // config.headers.authorization = `Bearer ${localStorage.getItem('user-jwt')}`;

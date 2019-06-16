@@ -11,7 +11,7 @@ export class GymkhanaRouter {
   }
 
   public getGymkhanas(req: Request, res: Response, next: NextFunction) {
-    const { city } = req.body;
+    const { city } = req.params;
     if (!city) return res.json({ error: { code: Errors.incorrectRequest } });
     gymkhanaBackend.getGymkhanas(city).then(r => res.json(r)).catch(next);
   }
@@ -23,8 +23,8 @@ export class GymkhanaRouter {
   }
 
   public init() {
-    this.router.get('/', this.getGymkhanas);
-    this.router.get('/phases', this.getPhases);
+    this.router.get('/:city', this.getGymkhanas);
+    this.router.post('/phases', this.getPhases);
   }
 }
 

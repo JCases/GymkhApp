@@ -26,7 +26,11 @@ export default class Phase extends Model<Phase> {
 
   @AllowNull(false)
   @Column
-  public image?: Buffer;
+  public image?: string;
+
+  @AllowNull(false)
+  @Column
+  public position?: string;
 
   // Phase (M) - Gymkhana (O)
   @ForeignKey(() => Gymkhana)

@@ -17,7 +17,7 @@ export default class Company extends Model<Company> {
 
   @AllowNull(false)
   @Column
-  public image?: Buffer;
+  public image?: string;
 
   // Gymkhana (O) - Company (M)
   @HasMany(() => Gymkhana)

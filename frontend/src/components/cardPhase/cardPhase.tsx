@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
-import { NavigationScreenProp, withNavigation } from 'react-navigation';
+import { withNavigation } from 'react-navigation';
 
 import { Body, Button, Card, CardItem, Icon, Text } from 'native-base';
 import { Image, View } from 'react-native';
 
 import { theme } from '../../theme';
 
-import { IPhase, StatesPhase } from '../../shared';
+import { StatesPhase } from '../../shared';
 
-interface IPropsCardPhase {
-  phase?: IPhase;
-  state?: StatesPhase;
-  navigation?: NavigationScreenProp<any, any>;
-}
+// interface IPropsCardPhase {
+//   phase?: IPhase;
+//   state?: StatesPhase;
 
-class CardPhase extends Component<any, IPropsCardPhase> {
-  public constructor(props: IPropsCardPhase) {
+//   navigation?: NavigationScreenProp<any, any>;
+// }
+
+class CardPhase extends Component<any, any> {
+  public constructor(props: any) {
     super(props);
   }
 
@@ -27,17 +28,15 @@ class CardPhase extends Component<any, IPropsCardPhase> {
           <React.Fragment>
             <CardItem cardBody>
               <Body>
-                <Image source={ require('./../../assets/images/login.png') } style={{ width: '100%', height: 120, alignSelf: 'stretch', position: 'relative' }}/>
+                <Image source={{ uri: this.props.phase.image }} style={{ width: '100%', height: 120, alignSelf: 'stretch', position: 'relative' }}/>
                 <View style={{ margin: 10 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase X</Text>
-                <Text style={{ marginTop: 10 }}>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis reprehenderit culpa illo distinctio rerum nam veniam explicabo saepe voluptatem? At nulla asperiores optio ipsum! Blanditiis veniam mollitia dolores veritatis officia.
-                </Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase { this.props.phase.phaseOrder }</Text>
+                <Text style={{ marginTop: 10 }}>{ this.props.phase.description }</Text>
                 </View>
               </Body>
             </CardItem>
             <CardItem footer style={{ justifyContent: 'center' }}>
-              <Button rounded style={{ backgroundColor: theme.blue.main }} onPress={ () => this.props.navigation!.navigate('Phase', this.props.phase) }>
+              <Button rounded style={{ backgroundColor: theme.blue.main }} onPress={ () => this.props.navigation!.navigate('Phase', { phase: this.props.phase }) }>
                 <Icon type="MaterialCommunityIcons" name="information-outline" color={ theme.white.main } />
                 <Text>Ver Información</Text>
               </Button>
@@ -46,14 +45,14 @@ class CardPhase extends Component<any, IPropsCardPhase> {
           ) : (this.props.state === StatesPhase.AWAIT ? (
             <CardItem cardBody>
               <Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between', margin: 10 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase X</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase { this.props.phase.phaseOrder }</Text>
                 <Text style={{ color: theme.red.main, alignSelf: 'center' }}>BLOQUEADA</Text>
               </Body>
             </CardItem>
           ) : (
             <CardItem cardBody>
               <Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'space-between', margin: 10 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase X</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Fase { this.props.phase.phaseOrder }</Text>
                 <Text style={{ color: theme.green.main, alignSelf: 'center' }}>COMPLETADA</Text>
               </Body>
             </CardItem>
@@ -64,4 +63,4 @@ class CardPhase extends Component<any, IPropsCardPhase> {
   }
 }
 
-export default withNavigation<IPropsCardPhase>(CardPhase);
+export default withNavigation(CardPhase);

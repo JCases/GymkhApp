@@ -34,7 +34,7 @@ export default class Gymkhana extends Model<Gymkhana> {
 
   @AllowNull(false)
   @Column
-  public image?: Buffer;
+  public image?: string;
 
   @AllowNull(false)
   @Column

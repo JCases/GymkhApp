@@ -27,9 +27,9 @@ export class UserRouter {
   }
 
   public register(req: Request, res: Response, next: NextFunction) {
-    const { nick, email, password } = req.body;
-    if (!nick || !email || !password) return res.json({ error: { code: Errors.incorrectRequest } });
-    userBackend.register(nick, email, password).then(r => res.json(r)).catch(next);
+    const { nick, email, password, city } = req.body;
+    if (!nick || !email || !password || !city) return res.json({ error: { code: Errors.incorrectRequest } });
+    userBackend.register(nick, email, password, city).then(r => res.json(r)).catch(next);
   }
 
   public updateUser(req: Request, res: Response, next: NextFunction) {
@@ -69,10 +69,10 @@ export class UserRouter {
     this.router.put('/update', this.updateUser);
 
     this.router.put('/gymkhana', this.addGymkhana);
-    this.router.get('/gymkhana', this.getGymkhanas);
+    this.router.post('/gymkhana', this.getGymkhanas);
 
     this.router.put('/phase', this.addPhase);
-    this.router.get('/phase', this.lastPhase);
+    this.router.post('/phase', this.lastPhase);
   }
 }
 

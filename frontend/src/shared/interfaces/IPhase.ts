@@ -5,7 +5,8 @@ export interface IPhase {
   name?: string;
   description?: string;
   phaseOrder?: number;
-  image?: Buffer;
+  image?: string;
+  position?: string;
   gymkhana?: IGymkhana;
   users?: IUser[];
 }
