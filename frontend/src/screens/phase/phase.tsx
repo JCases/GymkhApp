@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import client from '../../utils/http';
 
 import { Button, Card, CardItem, Container, Content, Footer, Header, Icon, Left, Right, Segment, Text } from 'native-base';
-import { Alert, Dimensions, ImageBackground, StatusBar, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, ImageBackground, StatusBar, View } from 'react-native';
 
 import { theme } from '../../theme';
+
+import { phaseComplete } from '../../actions/gymkhanas';
+import { IPhase, IResponse } from '../../shared';
 
 const deviceHeight = Dimensions.get('window').height;
 
@@ -16,6 +20,7 @@ enum SEGMENTS {
 interface IStatePhase {
   segment: SEGMENTS;
   position?: string;
+  loading?: boolean;
 }
 
 class Phase extends Component<any, IStatePhase> {
@@ -24,6 +29,7 @@ class Phase extends Component<any, IStatePhase> {
     this.state = {
       segment: SEGMENTS.DESCRIPTION,
       position: undefined,
+      loading: false,
     };
   }
 
@@ -73,7 +79,8 @@ class Phase extends Component<any, IStatePhase> {
           ) }
         </Content>
         <Footer style={{ backgroundColor: theme.white.main }}>
-          <Button rounded style={{ backgroundColor: theme.blue.main }} onPress={ () => this.verifyPosition(phase.position) }>
+          { this.state.loading ? <View style={{ marginRight: 20, justifyContent: 'center', alignContent: 'center' }}><ActivityIndicator size="large" color={ theme.blue.main } /></View> : <React.Fragment /> }
+          <Button rounded style={{ backgroundColor: theme.blue.main }} onPress={ () => this.verifyPosition(phase) }>
             <Icon type="MaterialIcons" name="gps-fixed" color={ theme.white.main } />
             { /* 2 Spaces like Padding */ }
             <Text style={{ color: theme.white.main }}>Validar Posición</Text>
@@ -84,15 +91,20 @@ class Phase extends Component<any, IStatePhase> {
     );
   }
 
-  private async verifyPosition(correctPosition: string) {
+  private async verifyPosition(phase: IPhase) {
+    this.setState({ loading: true });
     await navigator.geolocation.getCurrentPosition(position => this.setState({ position: `${position.coords.longitude}-${position.coords.latitude}` }),
-    () => Alert.alert('¡Error!', 'Problema al Localizar Posición', [{ text: 'Aceptar' }], { cancelable: false }),
-    { enableHighAccuracy: true, timeout: 1000, maximumAge: 2000 });
-    if (this.state.position === correctPosition) Alert.alert('¡Correcto!', '¡A por la siguiente fase!', [{ text: 'Aceptar', onPress: () => this.props.navigation!.goBack() }], { cancelable: false });
+    (e) => { this.setState({ loading: false }); Alert.alert('¡Error!', 'No se ha podido obtener tu localización', [{ text: 'Aceptar' }], { cancelable: false }); },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+    if (this.state.position === phase.position) {
+      this.props.phaseComplete();
+      await client.put<IResponse<boolean>>('/user/phase', { phase, user: this.props.user });
+      Alert.alert('¡Correcto!', '¡A por la siguiente fase!', [{ text: 'Aceptar', onPress: () => this.props.navigation!.goBack() }], { cancelable: false });
+    }
   }
 }
 
-const mapStateToProps = (state: any) => ({ cGymkhana: state.gymkhanas.currentGymkhana });
-const mapDispatchToProps = (dispatch: any) => ({});
+const mapStateToProps = (state: any) => ({ cGymkhana: state.gymkhanas.currentGymkhana, user: state.users.user });
+const mapDispatchToProps = (dispatch: any) => ({ phaseComplete: () => dispatch(phaseComplete()) });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Phase);

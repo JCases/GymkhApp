@@ -9,9 +9,9 @@ import CardPhase from '../../components/cardPhase';
 
 import { theme } from './../../theme';
 
-import { IGymkhana, IPhase, StatesPhase } from './../../shared';
+import { IGymkhana, IPhase, IUser, StatesPhase } from './../../shared';
 
-import { getPhases, removePhases } from '../../actions/gymkhanas';
+import { getLastPhase, getPhases, removePhases } from '../../actions/gymkhanas';
 
 interface IStateMainPhases {
   loading?: boolean;
@@ -20,9 +20,12 @@ interface IStateMainPhases {
 interface IPropsMainPhases {
   cGymkhanas?: IGymkhana;
   phases?: IPhase[];
+  lastPhase?: number;
+  user?: IUser;
 
   getPhases?: (gymkhana: IGymkhana) => void;
   removePhases?: () => void;
+  getLastPhase: (user: IUser, ids: string[]) => void;
 
   navigation: NavigationScreenProp<any, any>;
 }
@@ -36,9 +39,10 @@ class MainPhases extends Component<IPropsMainPhases, IStateMainPhases> {
   }
 
   public componentWillReceiveProps(nextProps: any) {
-    if (this.state.loading) {
+    if (!this.props.lastPhase) {
+      this.props.getLastPhase(nextProps.user, nextProps.phases!.map((p: IPhase) => p.id!));
       this.setState({ loading: false });
-    } else return;
+    } return;
   }
 
   public render() {
@@ -59,8 +63,8 @@ class MainPhases extends Component<IPropsMainPhases, IStateMainPhases> {
           </Body>
         </Header>
         <Content>
-          { this.props.phases ?
-            <FlatList data={ this.props.phases!.map((p: IPhase) => <CardPhase key={ p.id } state={ StatesPhase.ACTIVATE } phase={ p } image={ this.props.cGymkhanas!.image }/>) } renderItem={({ item }: any) => item } />
+          { this.props.phases && this.props.lastPhase ?
+            <FlatList data={ this.props.phases!.map((p: IPhase) => <CardPhase key={ p.id } state={ p.phaseOrder! > this.props.lastPhase! ? StatesPhase.AWAIT : (p.phaseOrder! < this.props.lastPhase! ? StatesPhase.COMPLETE : StatesPhase.ACTIVATE) } phase={ p } image={ this.props.cGymkhanas!.image }/>) } renderItem={({ item }: any) => item } />
           :
            <View style={{ marginTop: 40, justifyContent: 'center', alignContent: 'center' }}><ActivityIndicator size="large" color={ theme.blue.main } /></View>
           }
@@ -70,10 +74,16 @@ class MainPhases extends Component<IPropsMainPhases, IStateMainPhases> {
   }
 }
 
-const mapStateToProps = (state: any) => ({ phases: state.gymkhanas.phases, cGymkhanas: state.gymkhanas.currentGymkhana });
+const mapStateToProps = (state: any) => ({
+  user: state.users.user,
+  phases: state.gymkhanas.phases,
+  lastPhase: state.gymkhanas.lastPhase,
+  cGymkhanas: state.gymkhanas.currentGymkhana,
+});
 const mapDispatchToProps = (dispatch: any) => ({
   getPhases: (gymkhana: IGymkhana) => dispatch(getPhases(gymkhana)),
   removePhases: () => dispatch(removePhases()),
+  getLastPhase: (user: IUser, ids: string[]) => dispatch(getLastPhase(user, ids)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPhases);

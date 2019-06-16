@@ -57,9 +57,9 @@ export class UserRouter {
   }
 
   public lastPhase(req: Request, res: Response, next: NextFunction) {
-    const { user } = req.body;
+    const { user, ids } = req.body;
     if (!user) return res.json({ error: { code: Errors.incorrectRequest } });
-    userBackend.lastPhase(user).then(r => res.json(r)).catch(next);
+    userBackend.lastPhase(user, ids).then(r => res.json(r)).catch(next);
   }
 
   public init() {

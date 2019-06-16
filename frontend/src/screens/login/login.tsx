@@ -144,9 +144,8 @@ class Login extends Component<IPropsLogin, IStateLogin> {
   private async onClick() {
     const { email, password, passwordC, nick, mode } = this.state;
     if (mode === MODES.SIGN_IN) {
-      this.props.signIn!('admin@admin.com', 'admin');
-      // if (email.length > 0 && password.length > 0) this.props.signIn!(email, password);
-      // else { Alert.alert('Inicio de Sesión Fallido', 'Datos Incorrectos', [{ text: 'Aceptar' }], { cancelable: false }); return; }
+      if (email.length > 0 && password.length > 0) this.props.signIn!(email, password);
+      else { Alert.alert('Inicio de Sesión Fallido', 'Datos Incorrectos', [{ text: 'Aceptar' }], { cancelable: false }); return; }
       this.props.navigation.navigate('Main');
     } else if (mode === MODES.SIGN_UP) {
       if (email.length > 0 && password.length > 0 && passwordC === password && nick!.length > 0) this.setState({ visible: true });

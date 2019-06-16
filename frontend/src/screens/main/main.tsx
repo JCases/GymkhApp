@@ -81,7 +81,7 @@ class Main extends Component<IPropsMain, IStateMain> {
                 :
                 this.props.gymkhanas!.map(i => (<CardGymkhana key={ i.id } gymkhana={ i } active={ true }/>))
               } renderItem={({ item }: any) => item } />
-            ) : <View style={{ marginTop: 40, justifyContent: 'center', alignContent: 'center' }}><ActivityIndicator size="large" color={ theme.white.main } /></View> }
+            ) : <View style={{ marginTop: 40, justifyContent: 'center', alignContent: 'center' }}><ActivityIndicator size="large" color={ theme.blue.main } /></View> }
           </Content>
         </Container>
       </Drawer>

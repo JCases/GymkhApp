@@ -59,13 +59,12 @@ class UserBackend {
       if (gymkhanaDB && userDB) {
         const gymkhanasUser = await userDB.getGymkhanas();
         const match = gymkhanasUser.find(e => e.id === gymkhana.id);
-        console.log(match);
         if (match) return { result: false };
 
         userDB.addGymkhana(gymkhanaDB);
         return { result: true };
       } else return { error: { code: Errors.incorrectRequest } };
-    } catch (e) { console.log(e); return { error: { code: Errors.unexpected } }; }
+    } catch (e) { return { error: { code: Errors.unexpected } }; }
   }
 
   public async getGymkhanas(user: IUser) {
@@ -89,13 +88,19 @@ class UserBackend {
     } catch (e) { return { error: { code: Errors.unexpected } }; }
   }
 
-  public async lastPhase(user: IUser) {
+  public async lastPhase(user: IUser, ids: string[]) {
     try {
       const userDB = await models.User.findByPk(user.id!);
       if (userDB) {
         const lastStatus = await userDB.getPhases();
-        if (lastStatus.length > 0) return { result: lastStatus[0] };
-        else return { error: { code: Errors.notFound } };
+        if (lastStatus.length <= 0) return { error: { code: Errors.notFound } };
+
+        let lastMatch = 0;
+        for (let i = 0; i < ids.length; i++) {
+          const matches = lastStatus.find(p => p.id === ids[i]);
+          if (matches) if (matches.phaseOrder! > lastMatch) lastMatch = matches.phaseOrder!;
+        }
+        return { result: lastMatch };
       } else return { error: { code: Errors.incorrectRequest } };
     } catch (e) { return { error: { code: Errors.unexpected } }; }
   }
