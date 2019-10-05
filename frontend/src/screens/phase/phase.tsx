@@ -94,13 +94,13 @@ class Phase extends Component<any, IStatePhase> {
   private async verifyPosition(phase: IPhase) {
     this.setState({ loading: true });
     await navigator.geolocation.getCurrentPosition(position => this.setState({ position: `${position.coords.longitude}-${position.coords.latitude}` }),
-    (e) => { this.setState({ loading: false }); Alert.alert('¡Error!', 'No se ha podido obtener tu localización', [{ text: 'Aceptar' }], { cancelable: false }); },
+    () => { }, // (e) => { this.setState({ loading: false }); Alert.alert('¡Error!', 'No se ha podido obtener tu localización', [{ text: 'Aceptar' }], { cancelable: false }); },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
-    if (this.state.position === phase.position) {
-      this.props.phaseComplete();
-      await client.put<IResponse<boolean>>('/user/phase', { phase, user: this.props.user });
-      Alert.alert('¡Correcto!', '¡A por la siguiente fase!', [{ text: 'Aceptar', onPress: () => this.props.navigation!.goBack() }], { cancelable: false });
-    }
+    // if (this.state.position === phase.position) {
+    this.props.phaseComplete();
+    await client.put<IResponse<boolean>>('/user/phase', { phase, user: this.props.user });
+    Alert.alert('¡Correcto!', '¡A por la siguiente fase!', [{ text: 'Aceptar', onPress: () => this.props.navigation!.goBack() }], { cancelable: false });
+    // }
   }
 }
 

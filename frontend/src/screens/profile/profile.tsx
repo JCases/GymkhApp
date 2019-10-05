@@ -113,7 +113,7 @@ class User extends Component<IPropsUser, IStateUser> {
   private async modifyUser(attribute: string) {
     const nUser: IUser = { ...this.props.user, [attribute === 'Nombre' ? 'firstName' : (attribute === 'Apellidos' ? 'lastName' : 'city')]: this.state.changed };
     this.props.updateUser!(nUser);
-    this.setState({ attModify: '', changed: '', visible: false });
+    this.setState({ attModify: '', changed: '', visible: false, user: nUser });
   }
 
   private async requestCameraPermission() {

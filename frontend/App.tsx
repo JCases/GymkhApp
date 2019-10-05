@@ -18,6 +18,7 @@ import SideBar from './src/components/sidebar';
 
 export default class App extends Component<any, any> {
   public render() {
+    console.disableYellowBox = true;
     return (
       <Provider store={ store }>
         <Root>
